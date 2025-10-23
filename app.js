@@ -19,8 +19,8 @@ const flash = require('connect-flash');
 const db = require('./models/db'); 
 db.connect(); // This function call initiates the MongoDB connection
 
-// Import the User model for Passport configuration (Requires 'models/User.js')
-const User = require('./models/User'); 
+// Import the User model for Passport configuration (models/user.js)
+const User = require('./models/user'); 
 
 // --- ROUTER IMPORTS ---
 const indexRouter = require('./app_server/routes/index');

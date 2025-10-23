@@ -5,7 +5,7 @@
 
 require('dotenv').config();
 const db = require('../models/db');
-const User = require('../models/User');
+const User = require('../models/user');
 
 const email = (process.argv[2] || process.env.TEST_USER_EMAIL || 'test@example.com').toLowerCase();
 const password = process.argv[3] || process.env.TEST_USER_PASSWORD || 'Password123!';
