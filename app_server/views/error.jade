@@ -1,0 +1,21 @@
+extends layout
+
+block content
+  .container
+    .row
+      .col-md-12
+        .card.my-5
+          .card-header.bg-danger.text-white
+            h1.h4 Error #{error.status}
+          .card-body
+            p.lead.mb-4 An unexpected error occurred on the server.
+            h2.h5= message
+
+            // Display stack trace only in development environment
+            if error.stack
+              .alert.alert-warning.mt-4
+                p.mb-1 Debug details:
+                pre.mb-0 #{error.stack}
+            
+            p.mt-4 Please try navigating back to the 
+              a(href="/") home page.

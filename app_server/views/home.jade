@@ -1,0 +1,37 @@
+// app_server/views/home.jade
+
+extends layout
+
+block content
+  // 1. Hero Section with Search Bar
+  .hero-section
+    h1.display-4 Welcome to CampusMarket!
+    p.lead The official place for students to buy, sell, and trade.
+
+  hr
+
+  // 3. Featured Actions (Responsive Grid)
+  .row.text-center.g-4
+    .col-md-4
+      .card.h-100
+        .card-body
+          h5.card-title 📖 Browse Items
+          p.card-text Find great deals on textbooks, dorm essentials, and more posted by your peers.
+          // CORRECTED: href is now '/browse'
+          a.btn.btn-outline-primary(href='/browse') View All Listings
+
+    .col-md-4
+      .card.h-100
+        .card-body
+          h5.card-title 💰 Sell Your Stuff
+          p.card-text Easily list your unwanted items and make some extra cash. Free for students!
+          // CORRECTED: href is now '/upload'
+          a.btn.btn-outline-success(href='/upload') Upload an Item
+
+    .col-md-4
+      .card.h-100
+        .card-body
+          h5.card-title 🧑‍🎓 Student Verified
+          p.card-body-text Safe and secure transactions within the trusted campus community.
+          // CORRECTED: href is now '/auth/login'
+          a.btn.btn-outline-info(href='/auth/login') Login/Register

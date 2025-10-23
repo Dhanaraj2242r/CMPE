@@ -1,0 +1,19 @@
+// app_server/views/register.jade
+extends layout
+
+block content
+  .row.justify-content-center
+    .col-md-6.col-lg-4
+      .card.p-4.mt-5
+        h3.card-title.text-center Create Account
+        form(action='/auth/register', method='POST')
+          .mb-3
+            label.form-label(for='email') University Email (e.g., user@campus.edu)
+            input.form-control(type='email', id='email', name='email', required)
+          .mb-3
+            label.form-label(for='password') Password
+            input.form-control(type='password', id='password', name='password', required)
+          button.btn.btn-success.w-100.mb-3(type='submit') Register
+        .text-center
+          p Already have an account? 
+            a(href='/auth/login') Login here
