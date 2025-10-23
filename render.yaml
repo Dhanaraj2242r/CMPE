@@ -1,0 +1,25 @@
+# render.yaml for Campus Market Exchange
+# This defines a web service for Render. It uses the repository's root and starts with `npm start`.
+# After adding this file, connect your GitHub repo to Render and create a new Web Service using this file.
+
+services:
+  - type: web
+    name: campus-market-exchange
+    env: node
+    plan: free
+    branch: main
+    buildCommand: "npm install"
+    startCommand: "npm start"
+    region: oregon
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Do NOT add MONGODB_URI here. Set it in Render dashboard as a secret for security.
+
+    # Health checks — Render will use the start command and handle start/stop automatically.
+    # Service will bind to the port provided by Render in the PORT env var.
+    
+    autoDeploy: true
+    disk: 1024
+    instanceCount: 1
+    instanceType: starter
