@@ -35,3 +35,4 @@ npm start
 Notes
 - The app will use `MONGODB_URI` from environment if set, otherwise it falls back to `mongodb://127.0.0.1:27017/tse4`.
 - The connection is initialized in `models/db.js` and required early from `app.js`.
+# campus-market-exchange
