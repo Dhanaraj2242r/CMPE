@@ -5,7 +5,7 @@ const Item = require('../../models/item');
 
 function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
-        return next();
+    return next();
     }
     // Redirect unauthenticated users to login page
     res.redirect('/auth/login'); 
@@ -64,6 +64,30 @@ router.get('/upload', isLoggedIn, function(req, res, next) {
   res.render('upload', { title: 'Upload Item', user: req.user });
 });
 
+/* GET edit item page. REQUIRES LOGIN and ownership */
+router.get('/upload/:id', isLoggedIn, async function(req, res, next) {
+  try {
+    const item = await Item.findById(req.params.id).lean();
+    if (!item) {
+      req.flash('error', 'Item not found.');
+      return res.redirect('/browse');
+    }
+
+    // Only the owner can edit
+    if (item.seller.toString() !== req.user._id.toString()) {
+      req.flash('error', 'You can only edit your own items.');
+      return res.redirect('/browse');
+    }
+
+    // Render upload view with item pre-filled
+    res.render('upload', { title: 'Edit Item', user: req.user, item, name: item.name, description: item.description, price: item.price });
+  } catch (err) {
+    console.error('Error loading item for edit:', err);
+    req.flash('error', 'Could not load item for editing.');
+    res.redirect('/browse');
+  }
+});
+
 // Handle item uploads (requires login)
 router.post('/upload', isLoggedIn, async function(req, res, next) {
   try {
@@ -95,6 +119,47 @@ router.post('/upload', isLoggedIn, async function(req, res, next) {
     if (err && err.stack) console.error(err.stack);
     req.flash('error', 'An error occurred while posting the item. Please try again.');
     res.redirect('/upload');
+  }
+});
+
+// Handle item updates (requires login)
+router.post('/upload/:id', isLoggedIn, async function(req, res, next) {
+  try {
+    const { name, description, price } = req.body;
+    const itemId = req.params.id;
+
+    if (!name || !description || !price) {
+      return res.render('upload', { title: 'Edit Item', user: req.user, name, description, price, messages: { error: ['All fields are required.'] }, item: { _id: itemId } });
+    }
+
+    const parsedPrice = parseFloat(price);
+    if (isNaN(parsedPrice) || parsedPrice < 0) {
+      return res.render('upload', { title: 'Edit Item', user: req.user, name, description, price, messages: { error: ['Price must be a non-negative number.'] }, item: { _id: itemId } });
+    }
+
+    const item = await Item.findById(itemId);
+    if (!item) {
+      req.flash('error', 'Item not found.');
+      return res.redirect('/browse');
+    }
+
+    // Only owner can update
+    if (item.seller.toString() !== req.user._id.toString()) {
+      req.flash('error', 'You can only edit your own items.');
+      return res.redirect('/browse');
+    }
+
+    item.name = name;
+    item.description = description;
+    item.price = parsedPrice;
+
+    await item.save();
+    req.flash('success', 'Item updated successfully.');
+    res.redirect('/browse');
+  } catch (err) {
+    console.error('Update error:', err);
+    req.flash('error', 'An error occurred while updating the item.');
+    res.redirect('/browse');
   }
 });
 

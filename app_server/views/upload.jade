@@ -10,17 +10,18 @@ block content
     if messages && messages.success && messages.success.length
       .alert.alert-success #{messages.success[0]}
 
-    form(method='POST', action='/upload')
+    - var isEdit = (typeof item !== 'undefined' && item && item._id)
+    form(method='POST', action=(isEdit ? ('/upload/' + item._id) : '/upload'))
       .field
         label(for='name') Name
-        input(type='text', name='name', required, value=(typeof name !== 'undefined' ? name : ''))
+        input(type='text', name='name', required, value=(typeof name !== 'undefined' ? name : (isEdit ? item.name : '')))
 
       .field
         label(for='description') Description
-        textarea(name='description') #{typeof description !== 'undefined' ? description : ''}
+        textarea(name='description') #{typeof description !== 'undefined' ? description : (isEdit ? item.description : '')}
 
       .field
         label(for='price') Price
-        input(type='number', name='price', required, value=(typeof price !== 'undefined' ? price : ''))
+        input(type='number', name='price', required, value=(typeof price !== 'undefined' ? price : (isEdit ? item.price : '')))
 
-      button(type='submit') Post
+      button(type='submit') #{isEdit ? 'Update' : 'Post'}
