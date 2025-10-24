@@ -47,7 +47,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Set up the Express Session middleware
 app.use(session({
-  secret: 'a secret that should be complex', // *CHANGE THIS TO A UNIQUE SECRET*
+  // Use an environment variable for the session secret in production.
+  // If SESSION_SECRET is not provided we fall back to a default for local dev,
+  // but you should set SESSION_SECRET on Render for security.
+  secret: process.env.SESSION_SECRET || 'a secret that should be complex', // *CHANGE THIS TO A UNIQUE SECRET*
   resave: false, 
   saveUninitialized: false, 
   cookie: { maxAge: 1000 * 60 * 60 * 24 } // 24 hours
